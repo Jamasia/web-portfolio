@@ -94,21 +94,21 @@ table.history_table tbody td:first-child{
 
 /*MEMORY UI*/
 table.memory_table {
-  max-width: 100%;
-  font-size: 2.4vw;
-  text-align: center;
-  padding: 12% 0 0 10%;
-  border-spacing: 0vw 0.9vw;
+	max-width: 100%;
+	font-size: 2.4vw;
+	text-align: center;
+	padding: 12% 0 0 10%;
+	border-spacing: 0vw 0.9vw;
 }
 
 table.memory_table tbody tr {
-  background-color: black;
-  box-shadow: 0 .4vw 0 -.2vw #6abe30;
-  height: 2.8vw;
+	background-color: black;
+	box-shadow: 0 .4vw 0 -.2vw #6abe30;
+	height: 2.8vw;
 }
 
 table.memory_table tbody tr td {
-  width: 3vw;
+	width: 3vw;
 }
 
 
