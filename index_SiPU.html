@@ -1,0 +1,104 @@
+<html>
+	<head>
+		<title>Si.P.U.</title>
+		<link rel="icon" href="images/logo_SiPU.png" type="image/png">
+		<link rel="stylesheet" href="design_SiPU.css">
+	</head>
+	
+	<body>
+		<img src="images/logo_SiPU.png" alt="Si.P.U." class="floating-logo">
+		
+		<h2 >Si.P.U: A Simulated Processing Unit</h2>
+	
+		<section class="layout">
+
+			<div class = "history">
+				HISTORY
+
+				<table class="history_table">
+					<thead>
+						<tr>
+							<th>CTRL.</th>
+							<th>ADD.</th>
+							<th>DAT.</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+					</tbody>
+				</table>
+			</div>
+			
+			<div class = "memory">
+				MEMORY
+				
+				<table class="memory_table">
+					<tbody>
+						<tr id="A1"></tr>
+						<tr id="A2"></tr>
+						<tr id="A3"></tr>
+						<tr id="A4"></tr>
+						<tr id="A5"></tr>
+						<tr id="A6"></tr>
+						<tr id="A7"></tr>
+						<tr id="A8"></tr>
+						<tr id="A9"></tr>
+						<tr id="AA"></tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class = "instruction_set">
+				INSTRUCTION SET
+				
+				<table class = "instruct_table">
+					<tr class="mode">
+						<td><button id="load">LOAD</button></td>
+						<td><button id="store">STR</button></td>
+						<td><button id="memory">MEM</button></td>
+						<td><button id="delete">DEL</button></td>
+					</tr>
+					<tr>
+						<td><button id="1">1</button></td>
+						<td><button id="2">2</button></td>
+						<td><button id="3">3</button></td>
+						<td><button id="+">+</button></td>
+					</tr>
+					<tr>
+						<td><button id="4">4</button></td>
+						<td><button id="5">5</button></td>
+						<td><button id="6">6</button></td>
+						<td><button id="-">=</button></td>
+					</tr>
+					<tr>
+						<td><button id="7">7</button></td>
+						<td><button id="8">8</button></td>
+						<td><button id="9">9</button></td>
+						<td rowspan="2"><button id="enter">ENT</button></td>
+					</tr>
+					<tr>
+						<td><button id="reset">RST</button></td>
+						<td><button id="0">0</button></td>
+						<td><button id="@">@</button></td>
+					</tr>
+					
+				</table>
+				
+			</div>
+
+			<div class = "cpu">
+				CPU
+					<table class = "cpu_table">
+						<tr>
+							<td id = "R1"></td>
+							<td id = "R2"></td>
+							<td id = "R3"></td>
+						</tr>
+					</table>
+			</div>
+
+		  </section>
+
+	<script src="script_SiPU.js"></script>
+	</body>
+</html>
