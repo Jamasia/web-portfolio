@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'SiPU_KJ';
-    src: url('/font/Sipukj-Regular.ttf') format('truetype');
+    src: url('../../font/Sipukj-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
