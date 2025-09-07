@@ -1,0 +1,775 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drug Inventory Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .controls {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e1e5e9;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .file-input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-input {
+            padding: 8px 15px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            color: #667eea;
+        }
+
+        .file-input:hover {
+            background: #f8f9fa;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 25px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box:focus {
+            border-color: #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #dc3545;
+            font-size: 16px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin: 20px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            border-bottom: 2px solid #dee2e6;
+            transition: background-color 0.2s ease;
+        }
+
+        th:hover {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        }
+
+        th.sortable::after {
+            content: '⇅';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.5;
+            font-size: 12px;
+        }
+
+        th.sort-asc::after {
+            content: '↑';
+            opacity: 1;
+            color: #667eea;
+        }
+
+        th.sort-desc::after {
+            content: '↓';
+            opacity: 1;
+            color: #667eea;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fdfdfd;
+        }
+
+        .drug-id {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .price {
+            font-weight: 500;
+            color: #28a745;
+        }
+
+        .expiry-warning {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .quantity-low {
+            color: #fd7e14;
+            font-weight: 500;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .sample-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .sample-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 0;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .controls {
+                padding: 15px 20px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                min-width: auto;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Drug Inventory Management</h1>
+            <p>Sortable and searchable pharmaceutical database</p>
+        </div>
+
+        <div class="controls">
+            <div class="file-input-container">
+                <input type="file" id="csvFile" class="file-input" accept=".csv" />
+                <label for="csvFile">Choose CSV File</label>
+                <a href="#" class="sample-link" id="downloadSample">Download Sample CSV</a>
+            </div>
+            <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search by any field (Drug name, manufacturer, batch number, etc.)" disabled>
+        </div>
+
+        <div id="loadingMessage" class="loading" style="display: none;">
+            Loading data...
+        </div>
+
+        <div id="errorMessage" class="error" style="display: none;"></div>
+
+        <div class="table-container">
+            <table id="drugTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th data-column="drugId" class="sortable">Drug ID</th>
+                        <th data-column="manufacturer" class="sortable">Manufacturer</th>
+                        <th data-column="quantity" class="sortable">Quantity</th>
+                        <th data-column="drugName" class="sortable">Drug Name</th>
+                        <th data-column="genericName" class="sortable">Generic Name</th>
+                        <th data-column="dosageForm" class="sortable">Dosage Form</th>
+                        <th data-column="size" class="sortable">Size</th>
+                        <th data-column="unit" class="sortable">Unit</th>
+                        <th data-column="purchasePrice" class="sortable">Purchase Price</th>
+                        <th data-column="sellingPrice" class="sortable">Selling Price</th>
+                        <th data-column="expirationDate" class="sortable">Expiration Date</th>
+                        <th data-column="batchNumber" class="sortable">Batch Number</th>
+                        <th data-column="lastUpdated" class="sortable">Last Updated</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+            <div id="noResults" class="no-results" style="display: none;">
+                No matching records found. Try adjusting your search criteria.
+            </div>
+        </div>
+    </div>
+
+    <!-- Papa Parse CDN for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <script>
+        class DrugTableManager {
+            constructor() {
+                this.table = document.getElementById('drugTable');
+                this.tableBody = document.getElementById('tableBody');
+                this.searchInput = document.getElementById('searchInput');
+                this.noResults = document.getElementById('noResults');
+                this.loadingMessage = document.getElementById('loadingMessage');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.csvFileInput = document.getElementById('csvFile');
+                this.downloadSampleLink = document.getElementById('downloadSample');
+                
+                this.currentSort = { column: null, direction: null };
+                this.originalData = [];
+                this.csvData = [];
+                
+                this.init();
+            }
+
+            init() {
+                this.addEventListeners();
+                this.generateSampleCSV();
+            }
+
+            addEventListeners() {
+                // File input
+                this.csvFileInput.addEventListener('change', (e) => {
+                    this.handleFileSelect(e);
+                });
+
+                // Download sample link
+                this.downloadSampleLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.downloadSampleCSV();
+                });
+
+                // Search functionality
+                this.searchInput.addEventListener('input', () => {
+                    this.performSearch();
+                });
+
+                // Sort functionality
+                const headers = this.table.querySelectorAll('th.sortable');
+                headers.forEach(header => {
+                    header.addEventListener('click', () => {
+                        const column = header.getAttribute('data-column');
+                        this.sortTable(column);
+                    });
+                });
+            }
+
+            handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                if (!file.name.toLowerCase().endsWith('.csv')) {
+                    this.showError('Please select a valid CSV file.');
+                    return;
+                }
+
+                this.showLoading();
+                this.hideError();
+
+                Papa.parse(file, {
+                    header: true,
+                    skipEmptyLines: true,
+                    dynamicTyping: false, // Keep everything as strings initially
+                    complete: (results) => {
+                        this.processCsvData(results.data);
+                    },
+                    error: (error) => {
+                        this.showError(`Error parsing CSV: ${error.message}`);
+                        this.hideLoading();
+                    }
+                });
+            }
+
+            processCsvData(data) {
+                try {
+                    // Validate required columns
+                    const requiredColumns = [
+                        'drugId', 'manufacturer', 'quantity', 'drugName', 'genericName',
+                        'dosageForm', 'size', 'unit', 'purchasePrice', 'sellingPrice',
+                        'expirationDate', 'batchNumber', 'lastUpdated'
+                    ];
+
+                    if (data.length === 0) {
+                        throw new Error('CSV file is empty');
+                    }
+
+                    const headers = Object.keys(data[0]);
+                    const missingColumns = requiredColumns.filter(col => !headers.includes(col));
+                    
+                    if (missingColumns.length > 0) {
+                        throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
+                    }
+
+                    // Process and validate data
+                    this.csvData = data.map((row, index) => {
+                        try {
+                            return this.processRow(row, index);
+                        } catch (error) {
+                            console.warn(`Row ${index + 2} warning: ${error.message}`);
+                            return this.processRow(row, index, true); // Process with defaults
+                        }
+                    }).filter(row => row !== null);
+
+                    if (this.csvData.length === 0) {
+                        throw new Error('No valid data rows found in CSV');
+                    }
+
+                    this.loadDataIntoTable();
+                    this.hideLoading();
+                    this.searchInput.disabled = false;
+
+                } catch (error) {
+                    this.showError(error.message);
+                    this.hideLoading();
+                }
+            }
+
+            processRow(row, index, useDefaults = false) {
+                const processedRow = {};
+
+                // Helper function to get value or default
+                const getValue = (key, defaultValue = '', validator = null) => {
+                    let value = (row[key] || '').toString().trim();
+                    if (!value && useDefaults) {
+                        value = defaultValue;
+                    }
+                    if (validator && !validator(value)) {
+                        if (useDefaults) {
+                            value = defaultValue;
+                        } else {
+                            throw new Error(`Invalid ${key}: ${value}`);
+                        }
+                    }
+                    return value;
+                };
+
+                // Process each field with validation
+                processedRow.drugId = getValue('drugId', `D${String(index + 1).padStart(3, '0')}`);
+                processedRow.manufacturer = getValue('manufacturer', 'Unknown');
+                
+                const quantity = getValue('quantity', '0', val => !isNaN(val) && val >= 0);
+                processedRow.quantity = parseInt(quantity) || 0;
+                
+                processedRow.drugName = getValue('drugName', 'Unknown Drug');
+                processedRow.genericName = getValue('genericName', 'Unknown');
+                processedRow.dosageForm = getValue('dosageForm', 'Tablet');
+                
+                const size = getValue('size', '0', val => !isNaN(val) && val > 0);
+                processedRow.size = parseFloat(size) || 0;
+                
+                processedRow.unit = getValue('unit', 'mg');
+                
+                const purchasePrice = getValue('purchasePrice', '0', val => !isNaN(val.replace(/[₱,]/g, '')) && val >= 0);
+                processedRow.purchasePrice = this.parsePrice(purchasePrice);
+                
+                const sellingPrice = getValue('sellingPrice', '0', val => !isNaN(val.replace(/[₱,]/g, '')) && val >= 0);
+                processedRow.sellingPrice = this.parsePrice(sellingPrice);
+                
+                // Handle dates
+                const expirationDate = getValue('expirationDate', '2025-12-31');
+                processedRow.expirationDate = this.parseDate(expirationDate);
+                
+                processedRow.batchNumber = getValue('batchNumber', `BATCH${index + 1}`);
+                
+                const lastUpdated = getValue('lastUpdated', new Date().toISOString().split('T')[0]);
+                processedRow.lastUpdated = this.parseDate(lastUpdated);
+
+                return processedRow;
+            }
+
+            parsePrice(priceText) {
+                const cleaned = priceText.toString().replace(/[₱,]/g, '');
+                const price = parseFloat(cleaned);
+                return isNaN(price) ? 0 : price;
+            }
+
+            parseDate(dateString) {
+                const date = new Date(dateString);
+                return isNaN(date.getTime()) ? new Date() : date;
+            }
+
+            loadDataIntoTable() {
+                this.tableBody.innerHTML = '';
+                
+                this.csvData.forEach(rowData => {
+                    const row = this.createTableRow(rowData);
+                    this.tableBody.appendChild(row);
+                });
+
+                this.storeOriginalData();
+                this.applyCellStyling();
+                this.table.style.display = 'table';
+                this.noResults.style.display = 'none';
+            }
+
+            createTableRow(data) {
+                const row = document.createElement('tr');
+                
+                const cells = [
+                    data.drugId,
+                    data.manufacturer,
+                    data.quantity,
+                    data.drugName,
+                    data.genericName,
+                    data.dosageForm,
+                    data.size,
+                    data.unit,
+                    `₱${data.purchasePrice.toFixed(2)}`,
+                    `₱${data.sellingPrice.toFixed(2)}`,
+                    data.expirationDate.toISOString().split('T')[0],
+                    data.batchNumber,
+                    data.lastUpdated.toISOString().split('T')[0]
+                ];
+
+                cells.forEach((cellData, index) => {
+                    const cell = document.createElement('td');
+                    cell.textContent = cellData;
+                    
+                    // Add appropriate classes
+                    if (index === 0) cell.classList.add('drug-id');
+                    if (index === 8 || index === 9) cell.classList.add('price');
+                    
+                    row.appendChild(cell);
+                });
+
+                return row;
+            }
+
+            storeOriginalData() {
+                const rows = this.tableBody.querySelectorAll('tr');
+                this.originalData = Array.from(rows).map(row => ({
+                    element: row.cloneNode(true),
+                    data: this.extractRowData(row)
+                }));
+            }
+
+            extractRowData(row) {
+                const cells = row.querySelectorAll('td');
+                return {
+                    drugId: cells[0].textContent.trim(),
+                    manufacturer: cells[1].textContent.trim(),
+                    quantity: parseInt(cells[2].textContent.trim()),
+                    drugName: cells[3].textContent.trim(),
+                    genericName: cells[4].textContent.trim(),
+                    dosageForm: cells[5].textContent.trim(),
+                    size: parseFloat(cells[6].textContent.trim()),
+                    unit: cells[7].textContent.trim(),
+                    purchasePrice: this.parsePrice(cells[8].textContent.trim()),
+                    sellingPrice: this.parsePrice(cells[9].textContent.trim()),
+                    expirationDate: new Date(cells[10].textContent.trim()),
+                    batchNumber: cells[11].textContent.trim(),
+                    lastUpdated: new Date(cells[12].textContent.trim())
+                };
+            }
+
+            // Search and sort methods remain the same as before
+            performSearch() {
+                const searchTerm = this.searchInput.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    this.showAllRows();
+                    return;
+                }
+
+                const filteredData = this.originalData.filter(item => {
+                    const searchableText = [
+                        item.data.drugId,
+                        item.data.manufacturer,
+                        item.data.quantity.toString(),
+                        item.data.drugName,
+                        item.data.genericName,
+                        item.data.dosageForm,
+                        item.data.size.toString(),
+                        item.data.unit,
+                        item.data.purchasePrice.toString(),
+                        item.data.sellingPrice.toString(),
+                        item.data.expirationDate.toISOString().split('T')[0],
+                        item.data.batchNumber,
+                        item.data.lastUpdated.toISOString().split('T')[0]
+                    ].join(' ').toLowerCase();
+                    
+                    return searchableText.includes(searchTerm);
+                });
+
+                this.displayFilteredData(filteredData);
+            }
+
+            showAllRows() {
+                this.tableBody.innerHTML = '';
+                this.originalData.forEach(item => {
+                    this.tableBody.appendChild(item.element.cloneNode(true));
+                });
+                this.applyCellStyling();
+                this.noResults.style.display = 'none';
+                this.table.style.display = 'table';
+            }
+
+            displayFilteredData(filteredData) {
+                this.tableBody.innerHTML = '';
+                
+                if (filteredData.length === 0) {
+                    this.noResults.style.display = 'block';
+                    this.table.style.display = 'none';
+                } else {
+                    this.noResults.style.display = 'none';
+                    this.table.style.display = 'table';
+                    
+                    filteredData.forEach(item => {
+                        this.tableBody.appendChild(item.element.cloneNode(true));
+                    });
+                    
+                    this.applyCellStyling();
+                }
+            }
+
+            sortTable(column) {
+                if (this.originalData.length === 0) return;
+
+                if (this.currentSort.column === column) {
+                    if (this.currentSort.direction === 'asc') {
+                        this.currentSort.direction = 'desc';
+                    } else if (this.currentSort.direction === 'desc') {
+                        this.currentSort.direction = null;
+                        this.currentSort.column = null;
+                    } else {
+                        this.currentSort.direction = 'asc';
+                    }
+                } else {
+                    this.currentSort.column = column;
+                    this.currentSort.direction = 'asc';
+                }
+
+                this.updateHeaderStyling();
+
+                if (this.currentSort.column === null) {
+                    this.performSearch();
+                    return;
+                }
+
+                const currentRows = Array.from(this.tableBody.querySelectorAll('tr'));
+                const dataToSort = currentRows.map(row => ({
+                    element: row,
+                    data: this.extractRowData(row)
+                }));
+
+                dataToSort.sort((a, b) => {
+                    return this.compareValues(
+                        a.data[column], 
+                        b.data[column], 
+                        this.currentSort.direction,
+                        column
+                    );
+                });
+
+                this.tableBody.innerHTML = '';
+                dataToSort.forEach(item => {
+                    this.tableBody.appendChild(item.element);
+                });
+
+                this.applyCellStyling();
+            }
+
+            compareValues(a, b, direction, column) {
+                let comparison = 0;
+
+                if (column === 'quantity' || column === 'size' || 
+                    column === 'purchasePrice' || column === 'sellingPrice') {
+                    comparison = a - b;
+                } else if (column === 'expirationDate' || column === 'lastUpdated') {
+                    comparison = a.getTime() - b.getTime();
+                } else {
+                    comparison = a.toString().localeCompare(b.toString());
+                }
+
+                return direction === 'desc' ? -comparison : comparison;
+            }
+
+            updateHeaderStyling() {
+                const headers = this.table.querySelectorAll('th.sortable');
+                headers.forEach(header => {
+                    header.classList.remove('sort-asc', 'sort-desc');
+                });
+
+                if (this.currentSort.column) {
+                    const currentHeader = this.table.querySelector(`th[data-column="${this.currentSort.column}"]`);
+                    if (this.currentSort.direction === 'asc') {
+                        currentHeader.classList.add('sort-asc');
+                    } else if (this.currentSort.direction === 'desc') {
+                        currentHeader.classList.add('sort-desc');
+                    }
+                }
+            }
+
+            applyCellStyling() {
+                const rows = this.tableBody.querySelectorAll('tr');
+                const today = new Date();
+                const warningDate = new Date(today.getTime() + (30 * 24 * 60 * 60 * 1000));
+                
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    
+                    const quantity = parseInt(cells[2].textContent.trim());
+                    if (quantity < 50) {
+                        cells[2].classList.add('quantity-low');
+                    }
+                    
+                    const expiryDate = new Date(cells[10].textContent.trim());
+                    if (expiryDate < warningDate) {
+                        cells[10].classList.add('expiry-warning');
+                    }
+                });
+            }
+
+            showLoading() {
+                this.loadingMessage.style.display = 'block';
+                this.table.style.display = 'none';
+                this.noResults.style.display = 'none';
+            }
+
+            hideLoading() {
+                this.loadingMessage.style.display = 'none';
+            }
+
+            showError(message) {
+                this.errorMessage.textContent = message;
+                this.errorMessage.style.display = 'block';
+                this.table.style.display = 'none';
+                this.noResults.style.display = 'none';
+            }
+
+            hideError() {
+                this.errorMessage.style.display = 'none';
+            }
+
+            generateSampleCSV() {
+                this.sampleCsvData = `drugId,manufacturer,quantity,drugName,genericName,dosageForm,size,unit,purchasePrice,sellingPrice,expirationDate,batchNumber,lastUpdated
+D001,Pfizer,25,Lipitor,Atorvastatin,Tablet,20,mg,15.50,22.75,2025-12-15,LIP2024A,2024-09-01
+D002,Johnson & Johnson,150,Tylenol,Acetaminophen,Tablet,500,mg,5.25,8.00,2026-03-22,TYL2024B,2024-08-28
+D003,Novartis,80,Diovan,Valsartan,Tablet,160,mg,32.00,45.50,2024-10-30,DIO2024C,2024-07-15
+D004,GlaxoSmithKline,200,Ventolin,Salbutamol,Inhaler,100,mcg,180.00,250.00,2025-08-10,VEN2024D,2024-09-05
+D005,Bayer,300,Aspirin,Acetylsalicylic Acid,Tablet,100,mg,2.50,4.00,2025-11-18,ASP2024E,2024-08-20
+D006,Merck,120,Januvia,Sitagliptin,Tablet,100,mg,85.00,120.00,2025-05-14,JAN2024F,2024-09-03
+D007,Abbott,35,Synthroid,Levothyroxine,Tablet,50,mcg,12.75,18.50,2025-09-25,SYN2024G,2024-08-15
+D008,Roche,90,Tamiflu,Oseltamivir,Capsule,75,mg,95.00,135.00,2025-06-30,TAM2024H,2024-09-02`;
+            }
+
+            downloadSampleCSV() {
+                const blob = new Blob([this.sampleCsvData], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'drug_inventory_sample.csv');
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // Initialize the table manager when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new DrugTableManager();
+        });
+    </script>
+</body>
+</html>

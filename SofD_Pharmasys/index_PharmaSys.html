@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+    <title>PharmaSys | Login</title>
+	
+	<link rel="stylesheet" href="..\StyleSheets\00-common.css">
+	<link rel="stylesheet" href="..\StyleSheets\01-login-style.css">
+	
+	<link rel="icon" type="image/png" href="..\images\logo.png">
+	
+</head>
+
+<body>
+
+	<!--HEADER BANNER-->
+    <header class="header">
+        <div class="logo">
+			<b><span id="first">P</span>HARMA <span id="first">S</span>YS</b>
+		</div>
+		
+        <nav class="nav-links">
+            <a href="index.html" id="selected" disable>Log In</a>
+            <a href="sign_up.html" id="head_btn">Sign Up</a>
+        </nav>
+    </header>
+
+
+	<!-- MAIN BODY -->
+    <div class="main-container">
+        <div class="login-card">
+            <div class="login-header">
+				<img src="../images/logo.png" alt="PharmaSys Logo" width="250">
+
+            </div>
+            
+            <form class="login-form" id="loginForm">
+
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+
+                <div class="input-group">
+                    <div class="input-icon"></div>
+                    <input type="text" class="form-input" id="username" placeholder="Username..." required>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-icon"></div>
+                    <input type="password" class="form-input" id="password" placeholder="Password..." required>
+                </div>
+
+                <button type="submit" class="login-button" id="loginButton">
+                    <span class="loading"></span>
+                    <span class="button-text">Log In</span>
+                </button>
+
+                <div class="signup-link">
+                    Don't have an account? <a href="sign_up.html" id="signupLinkBottom">Sign Up</a> instead
+                </div>
+            </form>
+        </div>
+    </div>
+	
+	<!--<script src="..\Scripts\01-login_script.js"></script>-->
+</body>
+</html>

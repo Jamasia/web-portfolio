@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaSys - Employee Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8e6cf 0%, #7fcdcd 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #4a9eff, #6bb6ff);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background: #f8f9fa;
+            border-right: 1px solid #e0e6ed;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-section {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #e0e6ed;
+            background: white;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ddd, #bbb);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #666;
+            border: 3px solid #e0e6ed;
+        }
+
+        .profile-title {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 10px 0;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: linear-gradient(135deg, #4a9eff, #6bb6ff);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* Search Section */
+        .search-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .sort-dropdown {
+            background: white;
+            border: 2px solid #e0e6ed;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            min-width: 140px;
+            transition: all 0.3s ease;
+        }
+
+        .sort-dropdown:focus {
+            outline: none;
+            border-color: #4a9eff;
+            box-shadow: 0 0 10px rgba(74, 158, 255, 0.3);
+        }
+
+        .search-container {
+            flex: 1;
+            position: relative;
+            min-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: white;
+            border: 2px solid #e0e6ed;
+            border-radius: 25px;
+            padding: 12px 50px 12px 20px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #4a9eff;
+            box-shadow: 0 0 15px rgba(74, 158, 255, 0.3);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #4a9eff, #6bb6ff);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Product Table */
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+        }
+
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #4a9eff, #6bb6ff);
+            color: white;
+        }
+
+        .table-header th {
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .table-header th:last-child {
+            border-right: none;
+        }
+
+        .product-row {
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        .product-row:hover {
+            background: #f8f9fa;
+        }
+
+        .product-row td {
+            padding: 15px 12px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .drug-name {
+            font-weight: 600;
+            color: #4a9eff;
+        }
+
+        .stock-high {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .stock-low {
+            color: #ffc107;
+            font-weight: 600;
+        }
+
+        .stock-out {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .quantity-input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .edit-btn, .save-btn, .cancel-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 0 2px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #138496;
+            transform: translateY(-1px);
+        }
+
+        .save-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: #218838;
+        }
+
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background: #5a6268;
+        }
+
+        /* Add Button */
+        .add-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .add-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4a9eff;
+            box-shadow: 0 0 10px rgba(74, 158, 255, 0.3);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4a9eff, #6bb6ff);
+            color: white;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(74, 158, 255, 0.4);
+        }
+
+        .close-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .close-btn:hover {
+            background: #5a6268;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 3000;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .notification.success {
+            background: #28a745;
+        }
+
+        .notification.warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .notification.info {
+            background: #17a2b8;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                order: 2;
+            }
+            
+            .search-section {
+                flex-direction: column;
+            }
+            
+            .search-container {
+                min-width: auto;
+            }
+            
+            .product-table {
+                font-size: 12px;
+            }
+            
+            .table-header th,
+            .product-row td {
+                padding: 8px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🏥 PharmaSys | Employee Dashboard</h1>
+        <button class="logout-btn" onclick="logout()">Log Out</button>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="profile-section">
+                <div class="profile-avatar">👤</div>
+                <div class="profile-title">Employee</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" onclick="showSection('dashboard')">Dashboard</button>
+                <button class="nav-item" onclick="showSection('products')">Pharmacy Products</button>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <div class="search-section">
+                <select class="sort-dropdown" id="sortBy" onchange="sortProducts()">
+                    <option value="">Sort By: ID</option>
+                    <option value="name">Drug Name</option>
+                    <option value="manufacturer">Manufacturer</option>
+                    <option value="quantity">Quantity</option>
+                    <option value="expiration">Expiration Date</option>
+                </select>
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search drugs by name, manufacturer, or batch..." id="searchInput" onkeyup="searchProducts(event)">
+                    <button class="search-btn" onclick="performSearch()">🔍</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="product-table">
+                    <thead class="table-header">
+                        <tr>
+                            <th>Drug ID</th>
+                            <th>Manufacturer</th>
+                            <th>Drug Name</th>
+                            <th>Generic Name</th>
+                            <th>Dosage Form</th>
+                            <th>Expiration</th>
+                            <th>Batch #</th>
+                            <th>Quantity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                        <!-- Products will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Drug Button -->
+    <button class="add-btn" onclick="openAddModal()" title="Add New Drug (Requires Admin Approval)">+</button>
+
+    <!-- Add Drug Modal -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <h2>➕ Request New Drug Addition</h2>
+            <p style="color: #6c757d; margin-bottom: 20px;">This request will be sent to the administrator for approval.</p>
+            
+            <form id="addDrugForm">
+                <div class="form-group">
+                    <label for="newManufacturer">Manufacturer:</label>
+                    <input type="text" id="newManufacturer" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newDrugName">Drug Name:</label>
+                    <input type="text" id="newDrugName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newGenericName">Generic Name:</label>
+                    <input type="text" id="newGenericName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newDosageForm">Dosage Form:</label>
+                    <select id="newDosageForm" required>
+                        <option value="">Select dosage form...</option>
+                        <option value="Tablet">Tablet</option>
+                        <option value="Capsule">Capsule</option>
+                        <option value="Syrup">Syrup</option>
+                        <option value="Injection">Injection</option>
+                        <option value="Cream">Cream</option>
+                        <option value="Drop">Drop</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newExpiration">Expiration Date:</label>
+                    <input type="date" id="newExpiration" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newBatch">Batch Number:</label>
+                    <input type="text" id="newBatch" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newQuantity">Initial Quantity:</label>
+                    <input type="number" id="newQuantity" min="1" required>
+                </div>
+            </form>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn close-btn" onclick="closeAddModal()">Cancel</button>
+                <button class="modal-btn submit-btn" onclick="submitNewDrug()">Send Request</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample drug data
+        let drugs = [
+            {
+                id: 'DR001',
+                manufacturer: 'Generic Pharma',
+                drugName: 'Paracetamol',
+                genericName: 'Acetaminophen',
+                dosageForm: 'Tablet',
+                expiration: '2025-12-15',
+                batch: 'PC240815',
+                quantity: 150,
+                originalQuantity: 150
+            },
+            {
+                id: 'DR002',
+                manufacturer: 'MediCore',
+                drugName: 'Amoxicillin',
+                genericName: 'Amoxicillin',
+                dosageForm: 'Capsule',
+                expiration: '2025-08-20',
+                batch: 'AM240720',
+                quantity: 85,
+                originalQuantity: 85
+            },
+            {
+                id: 'DR003',
+                manufacturer: 'HealthPlus',
+                drugName: 'Ibuprofen',
+                genericName: 'Ibuprofen',
+                dosageForm: 'Tablet',
+                expiration: '2026-03-10',
+                batch: 'IB241205',
+                quantity: 203,
+                originalQuantity: 203
+            },
+            {
+                id: 'DR004',
+                manufacturer: 'BioPharma',
+                drugName: 'Cetirizine',
+                genericName: 'Cetirizine HCl',
+                dosageForm: 'Tablet',
+                expiration: '2025-11-30',
+                batch: 'CT240901',
+                quantity: 12,
+                originalQuantity: 12
+            },
+            {
+                id: 'DR005',
+                manufacturer: 'MediCore',
+                drugName: 'Omeprazole',
+                genericName: 'Omeprazole',
+                dosageForm: 'Capsule',
+                expiration: '2025-09-25',
+                batch: 'OM240825',
+                quantity: 0,
+                originalQuantity: 0
+            }
+        ];
+
+        let filteredDrugs = [...drugs];
+        let editingRow = null;
+
+        function loadProducts() {
+            const tbody = document.getElementById('productTableBody');
+            
+            tbody.innerHTML = filteredDrugs.map(drug => `
+                <tr class="product-row" data-id="${drug.id}">
+                    <td>${drug.id}</td>
+                    <td>${drug.manufacturer}</td>
+                    <td class="drug-name">${drug.drugName}</td>
+                    <td>${drug.genericName}</td>
+                    <td>${drug.dosageForm}</td>
+                    <td>${formatDate(drug.expiration)}</td>
+                    <td>${drug.batch}</td>
+                    <td class="quantity-cell">
+                        <span class="quantity-display ${getStockClass(drug.quantity)}">${drug.quantity}</span>
+                        <input type="number" class="quantity-input" value="${drug.quantity}" min="0" style="display: none;">
+                    </td>
+                    <td>
+                        <button class="edit-btn" onclick="editQuantity('${drug.id}')">Edit Stock</button>
+                        <button class="save-btn" onclick="saveQuantity('${drug.id}')" style="display: none;">Save</button>
+                        <button class="cancel-btn" onclick="cancelEdit('${drug.id}')" style="display: none;">Cancel</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getStockClass(quantity) {
+            if (quantity === 0) return 'stock-out';
+            if (quantity < 20) return 'stock-low';
+            return 'stock-high';
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        function editQuantity(drugId) {
+            if (editingRow) {
+                showNotification('Please save or cancel the current edit first.', 'warning');
+                return;
+            }
+
+            editingRow = drugId;
+            const row = document.querySelector(`[data-id="${drugId}"]`);
+            const quantityCell = row.querySelector('.quantity-cell');
+            const display = quantityCell.querySelector('.quantity-display');
+            const input = quantityCell.querySelector('.quantity-input');
+            const editBtn = row.querySelector('.edit-btn');
+            const saveBtn = row.querySelector('.save-btn');
+            const cancelBtn = row.querySelector('.cancel-btn');
+
+            display.style.display = 'none';
+            input.style.display = 'inline-block';
+            input.focus();
+            input.select();
+
+            editBtn.style.display = 'none';
+            saveBtn.style.display = 'inline-block';
+            cancelBtn.style.display = 'inline-block';
+        }
+
+        function saveQuantity(drugId) {
+            const row = document.querySelector(`[data-id="${drugId}"]`);
+            const input = row.querySelector('.quantity-input');
+            const newQuantity = parseInt(input.value);
+
+            if (isNaN(newQuantity) || newQuantity < 0) {
+                showNotification('Please enter a valid quantity (0 or greater).', 'warning');
+                return;
+            }
+
+            // Find and update the drug
+            const drugIndex = drugs.findIndex(drug => drug.id === drugId);
+            if (drugIndex !== -1) {
+                const oldQuantity = drugs[drugIndex].quantity;
+                drugs[drugIndex].quantity = newQuantity;
+
+                // Update filtered drugs as well
+                const filteredIndex = filteredDrugs.findIndex(drug => drug.id === drugId);
+                if (filteredIndex !== -1) {
+                    filteredDrugs[filteredIndex].quantity = newQuantity;
+                }
+
+                showNotification(`Stock updated: ${drugs[drugIndex].drugName} quantity changed from ${oldQuantity} to ${newQuantity}`, 'success');
+            }
+
+            cancelEdit(drugId);
+            loadProducts();
+        }
+
+        function cancelEdit(drugId) {
+            editingRow = null;
+            loadProducts();
+        }
+
+        function searchProducts(event) {
+            if (event && event.key !== 'Enter') return;
+            performSearch();
+        }
+
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                filteredDrugs = [...drugs];
+            } else {
+                filteredDrugs = drugs.filter(drug => 
+                    drug.drugName.toLowerCase().includes(searchTerm) ||
+                    drug.genericName.toLowerCase().includes(searchTerm) ||
+                    drug.manufacturer.toLowerCase().includes(searchTerm) ||
+                    drug.batch.toLowerCase().includes(searchTerm) ||
+                    drug.id.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            loadProducts();
+        }
+
+        function sortProducts() {
+            const sortBy = document.getElementById('sortBy').value;
+            
+            switch(sortBy) {
+                case 'name':
+                    filteredDrugs.sort((a, b) => a.drugName.localeCompare(b.drugName));
+                    break;
+                case 'manufacturer':
+                    filteredDrugs.sort((a, b) => a.manufacturer.localeCompare(b.manufacturer));
+                    break;
+                case 'quantity':
+                    filteredDrugs.sort((a, b) => b.quantity - a.quantity);
+                    break;
+                case 'expiration':
+                    filteredDrugs.sort((a, b) => new Date(a.expiration) - new Date(b.expiration));
+                    break;
+                default:
+                    filteredDrugs.sort((a, b) => a.id.localeCompare(b.id));
+            }
+            
+            loadProducts();
+        }
+
+        function openAddModal() {
+            document.getElementById('addModal').style.display = 'block';
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').style.display = 'none';
+            document.getElementById('addDrugForm').reset();
+        }
+
+        function submitNewDrug() {
+            const form = document.getElementById('addDrugForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const newDrug = {
+                manufacturer: document.getElementById('newManufacturer').value,
+                drugName: document.getElementById('newDrugName').value,
+                genericName: document.getElementById('newGenericName').value,
+                dosageForm: document.getElementById('newDosageForm').value,
+                expiration: document.getElementById('newExpiration').value,
+                batch: document.getElementById('newBatch').value,
+                quantity: parseInt(document.getElementById('newQuantity').value)
+            };
+
+            // Simulate sending request to admin
+            showNotification(`Request sent to administrator for approval: ${newDrug.drugName}`, 'info');
+            
+            closeAddModal();
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to log out?')) {
+                alert('Logging out...');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('addModal');
+            if (event.target === modal) {
+                closeAddModal();
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+        });
+    </script>
+</body>
+</html>

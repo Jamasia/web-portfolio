@@ -1,0 +1,69 @@
+/*COLOR PALLETtE
+#5C3738 - dark brown
+#5EBAC6 - dark teal
+#CBEEE4 - light mint
+#75FFD2 - bright mint
+#364C6A - dark blue
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #CBEEE4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER DESIGN */
+.header {
+    background: #5EBAC6;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	position: sticky;
+	top: 0; 
+	z-index: 1000;
+	
+	span#first{
+		color: #75FFD2;
+	}
+}
+
+.logo {
+   color: white;
+   font-size: 20px;
+   font-weight: 600;
+}
+
+/*NAVIGATION LINKS*/
+.nav-links {
+    display: flex;
+    gap: 15px;
+	color: white;
+
+	a {
+		font-size: 14px;
+		text-decoration: none;
+		font-weight: bold;
+		padding: 5px 10px;
+		border-radius: 3px;
+		color: #CBEEE4;
+	}
+	
+	a#head_btn {
+		transition: background-color 0.3s ease;
+	}
+	
+	a:hover {
+		color: #5EBAC6;
+		background-color: #CBEEE4;
+	}
+}

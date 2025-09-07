@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaSys - Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8c0 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Navigation */
+        .header {
+            background: linear-gradient(135deg, #4a9b8e 0%, #3a7a6d 100%);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Container */
+        .main-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            gap: 40px;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 200px;
+            height: 140px;
+        }
+
+        .logo-pill {
+            width: 180px;
+            height: 120px;
+            background: linear-gradient(135deg, #00d4aa 0%, #00bfa5 100%);
+            border-radius: 60px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0, 212, 170, 0.3);
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .logo-cross-v {
+            width: 30px;
+            height: 80px;
+            background: linear-gradient(135deg, #00d4aa 0%, #00bfa5 100%);
+            border-radius: 15px;
+            position: absolute;
+            top: 30px;
+            left: 85px;
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.2);
+        }
+
+        .logo-cross-h {
+            width: 80px;
+            height: 30px;
+            background: linear-gradient(135deg, #00d4aa 0%, #00bfa5 100%);
+            border-radius: 15px;
+            position: absolute;
+            top: 55px;
+            left: 60px;
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.2);
+        }
+
+        .logo-outline {
+            width: 200px;
+            height: 140px;
+            border: 4px solid #666;
+            border-radius: 70px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Signup Card */
+        .signup-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Header Section */
+        .signup-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .signup-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #4a9b8e;
+            margin-bottom: 10px;
+        }
+
+        .signup-subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Form Section */
+        .signup-form {
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: #4a9b8e;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-icon::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 2px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            border: 2px solid #4a9b8e;
+            border-radius: 6px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            border-color: #00d4aa;
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #999;
+        }
+
+        .form-input.error {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .form-input.success {
+            border-color: #4caf50;
+            background: #e8f5e8;
+        }
+
+        .input-error {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .signup-button {
+            width: 100%;
+            background: linear-gradient(135deg, #00d4aa 0%, #00bfa5 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        .signup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+        }
+
+        .signup-button:active {
+            transform: translateY(0);
+        }
+
+        .signup-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #4a9b8e;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .signup-button.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .signup-button.loading .loading {
+            display: inline-block;
+        }
+
+        /* Messages */
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c62828;
+            display: none;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2e7d32;
+            display: none;
+            font-size: 14px;
+        }
+
+        /* Role Selection */
+        .role-select {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            border: 2px solid #4a9b8e;
+            border-radius: 6px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: white;
+            cursor: pointer;
+        }
+
+        .role-select:focus {
+            border-color: #00d4aa;
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
+        .strength-weak {
+            color: #f44336;
+        }
+
+        .strength-medium {
+            color: #ff9800;
+        }
+
+        .strength-strong {
+            color: #4caf50;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px 15px;
+            }
+
+            .logo-section {
+                display: none;
+            }
+
+            .signup-card {
+                max-width: 100%;
+                padding: 25px 20px;
+            }
+
+            .signup-title {
+                font-size: 24px;
+            }
+
+            .header {
+                padding: 10px 15px;
+            }
+
+            .logo {
+                font-size: 16px;
+            }
+
+            .nav-links a {
+                font-size: 13px;
+                padding: 4px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .signup-card {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">[ ] PharmaSys</div>
+        <nav class="nav-links">
+            <a href="#" id="loginLink">Log In</a>
+            <a href="#" id="signupLink">Sign Up</a>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <div class="logo-section">
+            <div class="logo-container">
+                <div class="logo-outline"></div>
+                <div class="logo-pill">
+                    <span class="logo-text">Pharma Sys</span>
+                </div>
+                <div class="logo-cross-v"></div>
+                <div class="logo-cross-h"></div>
+            </div>
+        </div>
+
+        <div class="signup-card">
+            <div class="signup-header">
+                <h1 class="signup-title">Create an Account</h1>
+                <p class="signup-subtitle">Join PharmaSys to manage pharmaceutical inventory</p>
+            </div>
+            
+            <form class="signup-form" id="signupForm">
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+
+                <div class="input-group">
+                    <div class="input-icon"></div>
+                    <input type="text" class="form-input" id="fullName" placeholder="Full Name..." required>
+                    <div class="input-error" id="fullNameError"></div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-icon"></div>
+                    <input type="email" class="form-input" id="email" placeholder="Email Address..." required>
+                    <div class="input-error" id="emailError"></div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-icon"></div>
+                    <input type="text" class="form-input" id="username" placeholder="Username..." required>
+                    <div class="input-error" id="usernameError"></div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-icon"></div>
+                    <select class="role-select" id="role" required>
+                        <option value="">Select Role...</option>
+                        <option value="Pharmacist">Pharmacist</option>
+                        <option value="Pharmacy Technician">Pharmacy Technician</option>
+                        <option value="Cashier">Cashier</option>
+                        <option value="Inventory Clerk">Inventory Clerk</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Supervisor">Supervisor</option>
+                    </select>
+                    <div class="input-error" id="roleError"></div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-icon"></div>
+                    <input type="password" class="form-input" id="password" placeholder="Create Password..." required>
+                    <div class="password-strength" id="passwordStrength"></div>
+                    <div class="input-error" id="passwordError"></div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-icon"></div>
+                    <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm Password..." required>
+                    <div class="input-error" id="confirmPasswordError"></div>
+                </div>
+
+                <button type="submit" class="signup-button" id="signupButton">
+                    <span class="loading"></span>
+                    <span class="button-text">Sign Up</span>
+                </button>
+
+                <div class="login-link">
+                    Already have an account? <a href="#" id="loginLinkBottom">Log In</a> instead
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class SignupManager {
+            constructor() {
+                this.signupForm = document.getElementById('signupForm');
+                this.fullNameInput = document.getElementById('fullName');
+                this.emailInput = document.getElementById('email');
+                this.usernameInput = document.getElementById('username');
+                this.roleSelect = document.getElementById('role');
+                this.passwordInput = document.getElementById('password');
+                this.confirmPasswordInput = document.getElementById('confirmPassword');
+                this.signupButton = document.getElementById('signupButton');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.successMessage = document.getElementById('successMessage');
+                this.passwordStrength = document.getElementById('passwordStrength');
+                
+                this.existingUsers = []; // Would be loaded from existing CSV in real app
+                
+                this.init();
+            }
+
+            init() {
+                this.addEventListeners();
+                this.setupValidation();
+            }
+
+            addEventListeners() {
+                // Form submission
+                this.signupForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSignup();
+                });
+
+                // Real-time validation
+                this.fullNameInput.addEventListener('blur', () => this.validateFullName());
+                this.emailInput.addEventListener('blur', () => this.validateEmail());
+                this.usernameInput.addEventListener('blur', () => this.validateUsername());
+                this.roleSelect.addEventListener('change', () => this.validateRole());
+                this.passwordInput.addEventListener('input', () => this.validatePassword());
+                this.confirmPasswordInput.addEventListener('blur', () => this.validateConfirmPassword());
+
+                // Clear messages when user starts typing
+                [this.fullNameInput, this.emailInput, this.usernameInput, 
+                 this.passwordInput, this.confirmPasswordInput].forEach(input => {
+                    input.addEventListener('input', () => {
+                        this.hideMessages();
+                        this.clearFieldError(input);
+                    });
+                });
+
+                // Handle login links
+                document.querySelectorAll('#loginLink, #loginLinkBottom').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.redirectToLogin();
+                    });
+                });
+
+                // Password strength indicator
+                this.passwordInput.addEventListener('input', () => {
+                    this.checkPasswordStrength();
+                });
+            }
+
+            setupValidation() {
+                // Load existing users (simulate loading from CSV)
+                this.loadExistingUsers();
+            }
+
+            loadExistingUsers() {
+                // In a real application, this would load from the same CSV file
+                // For demo purposes, we'll use some sample existing users
+                this.existingUsers = [
+                    { username: 'admin', email: 'admin@pharmasys.com' },
+                    { username: 'pharmacist', email: 'maria.santos@pharmasys.com' },
+                    { username: 'manager', email: 'john.rodriguez@pharmasys.com' }
+                ];
+            }
+
+            validateFullName() {
+                const fullName = this.fullNameInput.value.trim();
+                const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+                
+                if (!fullName) {
+                    this.showFieldError('fullName', 'Full name is required');
+                    return false;
+                } else if (!nameRegex.test(fullName)) {
+                    this.showFieldError('fullName', 'Please enter a valid full name (2-50 characters, letters only)');
+                    return false;
+                } else {
+                    this.showFieldSuccess('fullName');
+                    return true;
+                }
+            }
+
+            validateEmail() {
+                const email = this.emailInput.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (!email) {
+                    this.showFieldError('email', 'Email address is required');
+                    return false;
+                } else if (!emailRegex.test(email)) {
+                    this.showFieldError('email', 'Please enter a valid email address');
+                    return false;
+                } else if (this.existingUsers.some(user => user.email.toLowerCase() === email.toLowerCase())) {
+                    this.showFieldError('email', 'This email address is already registered');
+                    return false;
+                } else {
+                    this.showFieldSuccess('email');
+                    return true;
+                }
+            }
+
+            validateUsername() {
+                const username = this.usernameInput.value.trim();
+                const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+                
+                if (!username) {
+                    this.showFieldError('username', 'Username is required');
+                    return false;
+                } else if (!usernameRegex.test(username)) {
+                    this.showFieldError('username', 'Username must be 3-20 characters (letters, numbers, underscore only)');
+                    return false;
+                } else if (this.existingUsers.some(user => user.username.toLowerCase() === username.toLowerCase())) {
+                    this.showFieldError('username', 'This username is already taken');
+                    return false;
+                } else {
+                    this.showFieldSuccess('username');
+                    return true;
+                }
+            }
+
+            validateRole() {
+                const role = this.roleSelect.value;
+                
+                if (!role) {
+                    this.showFieldError('role', 'Please select a role');
+                    return false;
+                } else {
+                    this.showFieldSuccess('role');
+                    return true;
+                }
+            }
+
+            validatePassword() {
+                const password = this.passwordInput.value;
+                
+                if (!password) {
+                    this.showFieldError('password', 'Password is required');
+                    return false;
+                } else if (password.length < 8) {
+                    this.showFieldError('password', 'Password must be at least 8 characters long');
+                    return false;
+                } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+                    this.showFieldError('password', 'Password must contain at least one uppercase letter, lowercase letter, and number');
+                    return false;
+                } else {
+                    this.showFieldSuccess('password');
+                    return true;
+                }
+            }
+
+            validateConfirmPassword() {
+                const password = this.passwordInput.value;
+                const confirmPassword = this.confirmPasswordInput.value;
+                
+                if (!confirmPassword) {
+                    this.showFieldError('confirmPassword', 'Please confirm your password');
+                    return false;
+                } else if (password !== confirmPassword) {
+                    this.showFieldError('confirmPassword', 'Passwords do not match');
+                    return false;
+                } else {
+                    this.showFieldSuccess('confirmPassword');
+                    return true;
+                }
+            }
+
+            checkPasswordStrength() {
+                const password = this.passwordInput.value;
+                let strength = 0;
+                let strengthText = '';
+                let strengthClass = '';
+
+                if (password.length >= 8) strength++;
+                if (/[a-z]/.test(password)) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/\d/.test(password)) strength++;
+                if (/[^a-zA-Z\d]/.test(password)) strength++;
+
+                if (password.length === 0) {
+                    strengthText = '';
+                } else if (strength <= 2) {
+                    strengthText = 'Weak password';
+                    strengthClass = 'strength-weak';
+                } else if (strength <= 3) {
+                    strengthText = 'Medium strength';
+                    strengthClass = 'strength-medium';
+                } else {
+                    strengthText = 'Strong password';
+                    strengthClass = 'strength-strong';
+                }
+
+                this.passwordStrength.textContent = strengthText;
+                this.passwordStrength.className = `password-strength ${strengthClass}`;
+            }
+
+            showFieldError(fieldName, message) {
+                const input = document.getElementById(fieldName);
+                const errorDiv = document.getElementById(fieldName + 'Error');
+                
+                input.classList.remove('success');
+                input.classList.add('error');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+
+            showFieldSuccess(fieldName) {
+                const input = document.getElementById(fieldName);
+                const errorDiv = document.getElementById(fieldName + 'Error');
+                
+                input.classList.remove('error');
+                input.classList.add('success');
+                errorDiv.style.display = 'none';
+            }
+
+            clearFieldError(input) {
+                input.classList.remove('error', 'success');
+                const errorDiv = document.getElementById(input.id + 'Error');
+                if (errorDiv) {
+                    errorDiv.style.display = 'none';
+                }
+            }
+
+            async handleSignup() {
+                // Validate all fields
+                const isValid = this.validateAllFields();
+                
+                if (!isValid) {
+                    this.showError('Please fix the errors above and try again.');
+                    return;
+                }
+
+                this.setLoading(true);
+                this.hideMessages();
+
+                try {
+                    // Simulate API call delay
+                    await this.delay(2000);
+
+                    // Create new user object
+                    const newUser = {
+                        username: this.usernameInput.value.trim(),
+                        password: this.passwordInput.value,
+                        role: this.roleSelect.value,
+                        fullName: this.fullNameInput.value.trim(),
+                        email: this.emailInput.value.trim(),
+                        active: 'true',
+                        lastLogin: '' // Will be set on first login
+                    };
+
+                    // In a real application, this would:
+                    // 1. Hash the password
+                    // 2. Save to database or append to CSV file
+                    // 3. Send confirmation email
+                    // 4. Handle server-side validation
+
+                    // For demo purposes, we'll simulate successful registration
+                    await this.saveNewUser(newUser);
+
+                    this.showSuccess('Account created successfully! You can now log in with your credentials.');
+                    
+                    // Clear form
+                    this.signupForm.reset();
+                    this.passwordStrength.textContent = '';
+                    this.clearAllFieldStates();
+
+                    // Redirect to login after delay
+                    setTimeout(() => {
+                        this.redirectToLogin();
+                    }, 3000);
+
+                } catch (error) {
+                    this.showError('Registration failed. Please try again.');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            async saveNewUser(user) {
+                // In a real application, this would append the user to the CSV file
+                // or save to a database. For demo purposes, we'll just simulate the process.
+                
+                // Add to existing users list (for username/email validation)
+                this.existingUsers.push({
+                    username: user.username,
+                    email: user.email
+                });
+
+                // Generate CSV row for the new user
+                const csvRow = `${user.username},${user.password},${user.role},${user.fullName},${user.email},${user.active},${user.lastLogin}`;
+                
+                console.log('New user CSV row:', csvRow);
+                console.log('User would be added to pharmasys_users.csv');
+
+                // In a real implementation:
+                // - Server-side script would append this row to the CSV file
+                // - Or save to a database
+                // - Password would be properly hashed
+                // - Email verification would be sent
+                
+                return Promise.resolve();
+            }
+
+            validateAllFields() {
+                const validations = [
+                    this.validateFullName(),
+                    this.validateEmail(),
+                    this.validateUsername(),
+                    this.validateRole(),
+                    this.validatePassword(),
+                    this.validateConfirmPassword()
+                ];
+
+                return validations.every(isValid => isValid);
+            }
+
+            clearAllFieldStates() {
+                [this.fullNameInput, this.emailInput, this.usernameInput, 
+                 this.roleSelect, this.passwordInput, this.confirmPasswordInput].forEach(input => {
+                    input.classList.remove('error', 'success');
+                    const errorDiv = document.getElementById(input.id + 'Error');
+                    if (errorDiv) {
+                        errorDiv.style.display = 'none';
+                    }
+                });
+            }
+
+            redirectToLogin() {
+                // In a real application, this would redirect to the login page
+                const message = 'Redirecting to login page...\n\nIn a real application, you would be redirected to the login page where you can sign in with your new account.';
+                
+                if (confirm(message + '\n\nClick OK to simulate login page redirect.')) {
+                    // For demo purposes, we'll just reload the page
+                    // In real app: window.location.href = '/login';
+                    alert('In a real application, you would now be on the login page.\n\nYour account details would be saved to the CSV file and you could log in immediately.');
+                }
+            }
+
+            setLoading(isLoading) {
+                this.signupButton.classList.toggle('loading', isLoading);
+                this.signupButton.disabled = isLoading;
+                
+                const buttonText = this.signupButton.querySelector('.button-text');
+                buttonText.textContent = isLoading ? 'Creating Account...' : 'Sign Up';
+            }
+
+            showError(message) {
+                this.errorMessage.textContent = message;
+                this.errorMessage.style.display = 'block';
+                this.successMessage.style.display = 'none';
+            }
+
+            showSuccess(message) {
+                this.successMessage.textContent = message;
+                this.successMessage.style.display = 'block';
+                this.errorMessage.style.display = 'none';
+            }
+
+            hideMessages() {
+                this.errorMessage.style.display = 'none';
+                this.successMessage.style.display = 'none';
+            }
+
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+
+        // Initialize the signup manager when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new SignupManager();
+        });
+    </script>
+</body>
+</html>
