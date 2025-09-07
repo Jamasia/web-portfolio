@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Function to load CSV data
 function loadCSVData() {
 
-    fetch('../Database/LoginData.csv')
+    fetch('Database/LoginData.csv')
         .then(response => response.text())
         .then(csvText => parseCSVData(csvText))
         .catch(error => {
@@ -159,3 +159,4 @@ function setLoadingState(isLoading) {
         }
     }
 }
+
